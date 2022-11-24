@@ -1,12 +1,13 @@
-FROM alpine:3
+FROM --platform=$BUILDPLATFORM alpine:3
 
-ARG ARCH
-ARG KUBERNETES_RELEASE=v1.21.3
+ARG TARGETARCH
+ARG KUBERNETES_RELEASE=v1.24.1
 
 WORKDIR /bin
 
 RUN apk add curl && \
-  curl -fsSLO https://storage.googleapis.com/kubernetes-release/release/${KUBERNETES_RELEASE}/bin/linux/${ARCH}/kubectl && \
+  uname -m && \
+  curl -LO https://dl.k8s.io/release/${KUBERNETES_RELEASE}/bin/linux/${TARGETARCH}/kubectl && \
   chmod +x kubectl && \
   addgroup -S kubectl && \
   adduser -S kubectl -G kubectl
